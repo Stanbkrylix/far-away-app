@@ -3,7 +3,38 @@ import { use, useState } from "react";
 import "./App.css";
 
 function App() {
-    const [items, setItems] = useState([]);
+    let [tempID, setTempID] = useState(1);
+    const [arrayList, setArrayList] = useState([]);
+    const [inputsVal, setInputsVal] = useState({
+        id: tempID,
+        trip: 1,
+        item: "",
+        complete: true,
+    });
+
+    function addToList(list) {
+        if (list.item === "") return;
+        setArrayList((prev) => [...prev, list]);
+        console.log(arrayList);
+
+        setTempID(tempID + 1);
+
+        setInputsVal((prev) => ({
+            id: prev.id + 1,
+            trip: 1,
+            item: "",
+            complete: true,
+        }));
+    }
+    function handleChange(event) {
+        const { name, value } = event.target;
+        setInputsVal((prev) => ({ ...prev, [name]: value }));
+    }
+
+    function handleSubmit(event) {
+        event.preventDefault();
+        addToList(inputsVal);
+    }
 
     return (
         <>
@@ -11,8 +42,12 @@ function App() {
                 <div>
                     <h1 className="title-h1">Far Away</h1>
                 </div>
-                <Form />
-                <PacketList />
+                <Form
+                    inputsVal={inputsVal}
+                    handleChange={handleChange}
+                    handleSubmit={handleSubmit}
+                />
+                <PacketList arrayList={arrayList} />
                 <Stats />
                 <FormExample />
             </div>
@@ -27,22 +62,14 @@ function Logo() {
         </div>
     );
 }
-function Form() {
-    const [inputsVal, setInputsVal] = useState({ trip: 1, item: "" });
-
-    function handleChange(event) {
-        const { name, value } = event.target;
-        console.log(name, value);
-    }
-    function handleSubmit() {}
-
+function Form({ inputsVal, handleChange, handleSubmit }) {
     return (
         <div className="form-container">
             <form action="submit" onSubmit={handleSubmit}>
                 <label htmlFor="numb-trip-items">
                     What do you need for your trip?
                     <select
-                        name="trips"
+                        name="trip"
                         id="numb-trip-items"
                         value={inputsVal.trip}
                         onChange={handleChange}
@@ -71,21 +98,23 @@ function Form() {
         </div>
     );
 }
-function PacketList() {
+function PacketList({ arrayList }) {
     return (
         <div className="list-container">
             <div className="lists">
-                <div className="list-card">
-                    <input
-                        type="checkbox"
-                        name="list-checkbox"
-                        id="list-checkbox"
-                        className="list-checkbox"
-                        disabled=""
-                    />
-                    <p className="list-text">Placeholder text</p>
-                    <span className="delete-btn">❌</span>
-                </div>
+                {arrayList.map((item) => (
+                    <div key={item.id} className="list-card">
+                        <input
+                            type="checkbox"
+                            name="list-checkbox"
+                            id="list-checkbox"
+                            className="list-checkbox"
+                            disabled={item.complete}
+                        />
+                        <p className="list-text">{item.item}</p>
+                        <span className="delete-btn">❌</span>
+                    </div>
+                ))}
             </div>
             <div className="sort-div">
                 <select name="sort-by" id="sort-by">

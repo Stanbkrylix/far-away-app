@@ -8,8 +8,28 @@
 .list-container {
     margin-bottom: 1rem;
 }
+.lists {
+    height: 500px;
+    display: flex;
+    align-content: start;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding: 1rem;
+}
 .list-card {
     border: 1px solid white;
-    width: 200px;
+    border-radius: 0.5rem;
+    width: 180px;
+    height: 40px;
     display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 0.5rem;
+}
+.delete-btn {
+    cursor: pointer;
+    transition: 250ms;
+}
+.delete-btn:hover {
+    transform: scale(1.2);
 }
