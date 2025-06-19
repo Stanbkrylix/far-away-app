@@ -56,6 +56,49 @@ function App() {
         );
     }
 
+    function clearList() {
+        if (arrayList.length === 0) return;
+        const confirm = prompt(
+            "are you sure you want to clear the list? if yes press 'y' or if no press 'n'"
+        );
+
+        if (confirm.toLowerCase() === "y") {
+            setArrayList([]);
+            return;
+        }
+
+        if (confirm.toLocaleLowerCase() === "n") {
+            return;
+        } else {
+            alert("please press 'y' for yes and 'n' for no");
+        }
+    }
+
+    function sortArrayList(event) {
+        const target = event.target.value;
+
+        if (target === "status") {
+            setArrayList((prev) =>
+                [...prev].sort((a, b) => b.complete - a.complete)
+            );
+        }
+
+        if (target === "description") {
+            console.log(target);
+
+            const sorted = [...arrayList].sort((a, b) =>
+                a.item.localeCompare(b.item)
+            );
+
+            setArrayList(sorted);
+        }
+
+        if (target === "order") {
+            console.log(target);
+            setArrayList((prev) => [...prev].sort((a, b) => a.id - b.id));
+        }
+    }
+
     return (
         <>
             <div className="app-container">
@@ -71,9 +114,11 @@ function App() {
                     arrayList={arrayList}
                     onDelete={onDelete}
                     onPack={onPack}
+                    clearList={clearList}
+                    sortArrayList={sortArrayList}
                 />
                 <Stats />
-                <FormExample />
+                {/* <FormExample /> */}
             </div>
         </>
     );
@@ -123,7 +168,7 @@ function Form({ inputsVal, handleChange, handleSubmit }) {
         </div>
     );
 }
-function PacketList({ arrayList, onDelete, onPack }) {
+function PacketList({ arrayList, onDelete, onPack, clearList, sortArrayList }) {
     return (
         <div className="list-container">
             <div className="lists">
@@ -156,18 +201,17 @@ function PacketList({ arrayList, onDelete, onPack }) {
 
             {/*  */}
             <div className="sort-div">
-                <select name="sort-by" id="sort-by">
-                    <option value="sort by input order">
-                        sort by input order
-                    </option>
-                    <option value="sort by description">
-                        sort by description
-                    </option>
-                    <option value="sort by packed status">
-                        sort by packed status
-                    </option>
+                <select name="sort-by" id="sort-by" onChange={sortArrayList}>
+                    <option value="order">sort by input order</option>
+                    <option value="description">sort by description</option>
+                    <option value="status">sort by packed status</option>
                 </select>
-                <input type="button" value="Clear List" className="clear-btn" />
+                <input
+                    type="button"
+                    value="Clear List"
+                    className="clear-btn"
+                    onClick={clearList}
+                />
             </div>
         </div>
     );
