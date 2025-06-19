@@ -33,3 +33,7 @@
 .delete-btn:hover {
     transform: scale(1.2);
 }
+.pack {
+    text-decoration: line-through;
+    opacity: 0.5;
+}

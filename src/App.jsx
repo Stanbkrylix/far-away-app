@@ -7,24 +7,29 @@ function App() {
     const [arrayList, setArrayList] = useState([]);
     const [inputsVal, setInputsVal] = useState({
         id: tempID,
-        trip: 1,
+        trip: 0,
         item: "",
         complete: true,
     });
 
-    function addToList(list) {
-        if (list.item === "") return;
-        setArrayList((prev) => [...prev, list]);
-        console.log(arrayList);
-
+    function resetValues() {
         setTempID(tempID + 1);
 
         setInputsVal((prev) => ({
             id: prev.id + 1,
-            trip: 1,
+            trip: prev.trip - 1,
             item: "",
             complete: true,
         }));
+    }
+
+    function addToList(list) {
+        if (list.item === "" || !list.trip) {
+            alert("Number of trips or items cannot be empty");
+            return;
+        }
+        setArrayList((prev) => [...prev, list]);
+        console.log(arrayList);
     }
     function handleChange(event) {
         const { name, value } = event.target;
@@ -33,7 +38,22 @@ function App() {
 
     function handleSubmit(event) {
         event.preventDefault();
+
         addToList(inputsVal);
+        resetValues();
+    }
+
+    function onDelete(id) {
+        // delete selected item
+        setArrayList((prev) => prev.filter((item) => item.id !== id));
+    }
+    function onPack(id) {
+        // updating checkbox
+        setArrayList((prev) =>
+            prev.map((item) =>
+                item.id === id ? { ...item, complete: !item.complete } : item
+            )
+        );
     }
 
     return (
@@ -47,7 +67,11 @@ function App() {
                     handleChange={handleChange}
                     handleSubmit={handleSubmit}
                 />
-                <PacketList arrayList={arrayList} />
+                <PacketList
+                    arrayList={arrayList}
+                    onDelete={onDelete}
+                    onPack={onPack}
+                />
                 <Stats />
                 <FormExample />
             </div>
@@ -74,6 +98,7 @@ function Form({ inputsVal, handleChange, handleSubmit }) {
                         value={inputsVal.trip}
                         onChange={handleChange}
                     >
+                        <option value="0"></option>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -98,7 +123,7 @@ function Form({ inputsVal, handleChange, handleSubmit }) {
         </div>
     );
 }
-function PacketList({ arrayList }) {
+function PacketList({ arrayList, onDelete, onPack }) {
     return (
         <div className="list-container">
             <div className="lists">
@@ -109,13 +134,27 @@ function PacketList({ arrayList }) {
                             name="list-checkbox"
                             id="list-checkbox"
                             className="list-checkbox"
-                            disabled={item.complete}
+                            checked={!item.complete}
+                            onChange={() => onPack(item.id)}
                         />
-                        <p className="list-text">{item.item}</p>
-                        <span className="delete-btn">❌</span>
+                        <p
+                            className={`list-text ${
+                                item.complete ? "" : "pack"
+                            }`}
+                        >
+                            {item.item}
+                        </p>
+                        <span
+                            className="delete-btn"
+                            onClick={() => onDelete(item.id)}
+                        >
+                            ❌
+                        </span>
                     </div>
                 ))}
             </div>
+
+            {/*  */}
             <div className="sort-div">
                 <select name="sort-by" id="sort-by">
                     <option value="sort by input order">
