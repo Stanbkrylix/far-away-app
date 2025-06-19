@@ -4,3 +4,12 @@
     padding: 2rem;
     text-align: center;
 }
+
+.list-container {
+    margin-bottom: 1rem;
+}
+.list-card {
+    border: 1px solid white;
+    width: 200px;
+    display: flex;
+}

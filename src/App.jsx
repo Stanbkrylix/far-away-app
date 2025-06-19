@@ -14,6 +14,7 @@ function App() {
                 <Form />
                 <PacketList />
                 <Stats />
+                <FormExample />
             </div>
         </>
     );
@@ -27,27 +28,45 @@ function Logo() {
     );
 }
 function Form() {
+    const [inputsVal, setInputsVal] = useState({ trip: 1, item: "" });
+
+    function handleChange(event) {
+        const { name, value } = event.target;
+        console.log(name, value);
+    }
+    function handleSubmit() {}
+
     return (
         <div className="form-container">
-            <form action="submit">
+            <form action="submit" onSubmit={handleSubmit}>
                 <label htmlFor="numb-trip-items">
                     What do you need for your trip?
+                    <select
+                        name="trips"
+                        id="numb-trip-items"
+                        value={inputsVal.trip}
+                        onChange={handleChange}
+                    >
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
                 </label>
+                <br />
+                <label>
+                    <input
+                        type="text"
+                        name="item"
+                        value={inputsVal.item}
+                        id="task-name"
+                        placeholder="item.."
+                        onChange={handleChange}
+                    />
 
-                <select name="numb-trip-items" id="numb-trip-items">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select>
-                <input
-                    type="text"
-                    name=""
-                    id="task-name"
-                    placeholder="item.."
-                />
-                <input type="button" value="ADD" />
+                    <button type="Submit">ADD</button>
+                </label>
             </form>
         </div>
     );
@@ -59,8 +78,8 @@ function PacketList() {
                 <div className="list-card">
                     <input
                         type="checkbox"
-                        name=""
-                        id=""
+                        name="list-checkbox"
+                        id="list-checkbox"
                         className="list-checkbox"
                         disabled=""
                     />
@@ -86,4 +105,64 @@ function PacketList() {
     );
 }
 function Stats() {}
+
+function FormExample() {
+    const [inputVal, setInputVal] = useState({
+        name: "",
+        age: "",
+        tripItemCount: 1,
+    });
+
+    function handleSubmit() {}
+    function handleChange(event) {
+        const { name, value } = event.target;
+        console.log(name, value);
+
+        setInputVal((prev) => ({ ...prev, [name]: value }));
+        console.log(inputVal);
+    }
+    return (
+        <div className="form-example">
+            {/* Start of form */}
+            <form onSubmit={handleSubmit}>
+                <label>
+                    Name:{" "}
+                    <input
+                        type="text"
+                        name="name"
+                        value={inputVal.name}
+                        onChange={handleChange}
+                    />
+                </label>
+                <br />
+
+                <label>
+                    Age:
+                    <input
+                        type="number"
+                        name="age"
+                        value={inputVal.age}
+                        onChange={handleChange}
+                    />
+                </label>
+                <br />
+                <label>
+                    what do you need for the trip?
+                    <select
+                        name="tripItemCount"
+                        value={inputVal.tripCount}
+                        onChange={handleChange}
+                        id=""
+                    >
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </label>
+            </form>
+        </div>
+    );
+}
 export default App;
